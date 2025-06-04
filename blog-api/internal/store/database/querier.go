@@ -11,12 +11,20 @@ import (
 )
 
 type Querier interface {
+	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DecrementPostLikesCount(ctx context.Context, id int64) (Post, error)
+	DeletePost(ctx context.Context, id int64) error
 	DeleteUserById(ctx context.Context, id int64) error
+	GetPostById(ctx context.Context, id int64) (Post, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)
 	GetUserByUUID(ctx context.Context, userUuid pgtype.UUID) (User, error)
 	GetUserByUsername(ctx context.Context, username string) (User, error)
+	IncrementPostLikesCount(ctx context.Context, id int64) (Post, error)
+	ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error)
+	ListPostsByUserId(ctx context.Context, userID int64) ([]Post, error)
+	UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error)
 	UpdateUserEmailById(ctx context.Context, arg UpdateUserEmailByIdParams) (User, error)
 	UpdateUserPasswordById(ctx context.Context, arg UpdateUserPasswordByIdParams) (User, error)
 }

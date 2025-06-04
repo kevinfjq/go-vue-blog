@@ -8,7 +8,9 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// Stores comments made by users on posts or other comments.
 type Comment struct {
+	// Internal primary key (auto-incrementing big integer). Will be exposed externally via HashID.
 	ID int64 `json:"id"`
 	// Foreign key referencing the post (Posts.id) this comment belongs to.
 	PostID int64 `json:"post_id"`
@@ -26,6 +28,7 @@ type Comment struct {
 	LikesCount int32 `json:"likes_count"`
 }
 
+// Stores blog posts or articles.
 type Post struct {
 	// Internal primary key (auto-incrementing big integer). Will be exposed externally via HashID.
 	ID int64 `json:"id"`
@@ -43,6 +46,7 @@ type Post struct {
 	LikesCount int32 `json:"likes_count"`
 }
 
+// Stores user account information
 type User struct {
 	// Primary Key, unique identifier for the user
 	ID int64 `json:"id"`
@@ -60,6 +64,7 @@ type User struct {
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
+// Stores likes given by users to targets (e.g., posts, comments).
 type Userlike struct {
 	// Foreign key referencing the user (Users.id) who liked the item.
 	UserID int64 `json:"user_id"`
