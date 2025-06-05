@@ -106,17 +106,12 @@ func (q *Queries) IncrementPostLikesCount(ctx context.Context, id int64) (Post, 
 	return i, err
 }
 
-const listPosts = `-- name: ListPosts :many
-SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2
+const listPostsByUserIdOrderByCreatedAtAsc = `-- name: ListPostsByUserIdOrderByCreatedAtAsc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts WHERE user_id = $1 ORDER BY created_at
 `
 
-type ListPostsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
-func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error) {
-	rows, err := q.db.Query(ctx, listPosts, arg.Limit, arg.Offset)
+func (q *Queries) ListPostsByUserIdOrderByCreatedAtAsc(ctx context.Context, userID int64) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsByUserIdOrderByCreatedAtAsc, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -143,12 +138,224 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 	return items, nil
 }
 
-const listPostsByUserId = `-- name: ListPostsByUserId :many
-SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts WHERE user_id = $1 ORDER BY created_at DESC
+const listPostsByUserIdOrderByCreatedAtDesc = `-- name: ListPostsByUserIdOrderByCreatedAtDesc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts WHERE user_id = $1 ORDER BY created_at
 `
 
-func (q *Queries) ListPostsByUserId(ctx context.Context, userID int64) ([]Post, error) {
-	rows, err := q.db.Query(ctx, listPostsByUserId, userID)
+func (q *Queries) ListPostsByUserIdOrderByCreatedAtDesc(ctx context.Context, userID int64) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsByUserIdOrderByCreatedAtDesc, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsByUserIdOrderByLikesAsc = `-- name: ListPostsByUserIdOrderByLikesAsc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts WHERE user_id = $1 ORDER BY likes_count, created_at DESC
+`
+
+func (q *Queries) ListPostsByUserIdOrderByLikesAsc(ctx context.Context, userID int64) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsByUserIdOrderByLikesAsc, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsByUserIdOrderByLikesDesc = `-- name: ListPostsByUserIdOrderByLikesDesc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts WHERE user_id = $1 ORDER BY likes_count DESC, created_at DESC
+`
+
+func (q *Queries) ListPostsByUserIdOrderByLikesDesc(ctx context.Context, userID int64) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsByUserIdOrderByLikesDesc, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsOrderByCreatedAtAsc = `-- name: ListPostsOrderByCreatedAtAsc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts ORDER BY created_at  LIMIT $1 OFFSET $2
+`
+
+type ListPostsOrderByCreatedAtAscParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListPostsOrderByCreatedAtAsc(ctx context.Context, arg ListPostsOrderByCreatedAtAscParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsOrderByCreatedAtAsc, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsOrderByCreatedAtDesc = `-- name: ListPostsOrderByCreatedAtDesc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2
+`
+
+type ListPostsOrderByCreatedAtDescParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListPostsOrderByCreatedAtDesc(ctx context.Context, arg ListPostsOrderByCreatedAtDescParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsOrderByCreatedAtDesc, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsOrderByLikesAtAsc = `-- name: ListPostsOrderByLikesAtAsc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts ORDER BY likes_count, created_at DESC LIMIT $1 OFFSET $2
+`
+
+type ListPostsOrderByLikesAtAscParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListPostsOrderByLikesAtAsc(ctx context.Context, arg ListPostsOrderByLikesAtAscParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsOrderByLikesAtAsc, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LikesCount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPostsOrderByLikesAtDesc = `-- name: ListPostsOrderByLikesAtDesc :many
+SELECT id, user_id, title, content, created_at, updated_at, likes_count FROM posts ORDER BY likes_count DESC, created_at DESC LIMIT $1 OFFSET $2
+`
+
+type ListPostsOrderByLikesAtDescParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListPostsOrderByLikesAtDesc(ctx context.Context, arg ListPostsOrderByLikesAtDescParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, listPostsOrderByLikesAtDesc, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

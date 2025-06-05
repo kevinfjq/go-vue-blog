@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/migrations/000004_create_user_likes_table.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/migrations/000005_add_likes_count_to_posts_and_comments.down.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/migrations/000005_add_likes_count_to_posts_and_comments.up.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/sql/queries/comments.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/sql/queries/posts.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/sql/queries/user.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
