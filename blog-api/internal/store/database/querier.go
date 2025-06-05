@@ -11,13 +11,17 @@ import (
 )
 
 type Querier interface {
+	CountLikesForTarget(ctx context.Context, arg CountLikesForTargetParams) (int64, error)
 	CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error)
+	CreateLike(ctx context.Context, arg CreateLikeParams) (Userlike, error)
 	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DecrementPostLikesCount(ctx context.Context, id int64) (Post, error)
+	DeleteLike(ctx context.Context, arg DeleteLikeParams) error
 	DeletePost(ctx context.Context, id int64) error
 	DeleteUserById(ctx context.Context, id int64) error
 	GetCommentById(ctx context.Context, id int64) (Comment, error)
+	GetLike(ctx context.Context, arg GetLikeParams) (Userlike, error)
 	GetPostById(ctx context.Context, id int64) (Post, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)
@@ -44,6 +48,7 @@ type Querier interface {
 	ListPostsOrderByCreatedAtDesc(ctx context.Context, arg ListPostsOrderByCreatedAtDescParams) ([]Post, error)
 	ListPostsOrderByLikesAtAsc(ctx context.Context, arg ListPostsOrderByLikesAtAscParams) ([]Post, error)
 	ListPostsOrderByLikesAtDesc(ctx context.Context, arg ListPostsOrderByLikesAtDescParams) ([]Post, error)
+	ListUserLikesByType(ctx context.Context, arg ListUserLikesByTypeParams) ([]Userlike, error)
 	UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error)
 	UpdateUserEmailById(ctx context.Context, arg UpdateUserEmailByIdParams) (User, error)
 	UpdateUserPasswordById(ctx context.Context, arg UpdateUserPasswordByIdParams) (User, error)
